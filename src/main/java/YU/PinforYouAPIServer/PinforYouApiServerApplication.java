@@ -10,6 +10,7 @@ public class PinforYouApiServerApplication {
 		SpringApplication.run(PinforYouApiServerApplication.class, args);
 
 		// 21911981 정수열...
+		// 21912145 노지인
 	}
 
 }
