@@ -27,5 +27,8 @@ public class ChallengeEntity {
     private String category;
 
     @Column
-    private Integer achieved_amount;
+    private Integer cost;
+
+    @Column
+    private Integer goal;
 }

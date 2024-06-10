@@ -28,4 +28,7 @@ public class CardEntity {
 
     @Column
     private String company;
+
+    @Column
+    private String image_url;
 }

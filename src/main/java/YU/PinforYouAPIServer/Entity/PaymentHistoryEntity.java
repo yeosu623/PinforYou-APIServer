@@ -1,8 +1,6 @@
 package YU.PinforYouAPIServer.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +13,10 @@ import java.util.Date;
 public class PaymentHistoryEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer payment_id;
+
+    @Column
     private Integer user_id;
 
     @Column

@@ -1,8 +1,6 @@
 package YU.PinforYouAPIServer.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +11,10 @@ import lombok.Setter;
 public class UserCardEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer user_card_id;
+
+    @Column
     private Integer user_id;
 
     @Column
