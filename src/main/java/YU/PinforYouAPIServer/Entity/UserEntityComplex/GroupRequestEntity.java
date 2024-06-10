@@ -1,4 +1,4 @@
-package YU.PinforYouAPIServer.Entity.UserEntity_Complex;
+package YU.PinforYouAPIServer.Entity.UserEntityComplex;
 
 import lombok.Getter;
 import lombok.Setter;

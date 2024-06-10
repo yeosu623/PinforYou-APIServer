@@ -9,4 +9,5 @@ public class ChallengeController {
 
     @Autowired
     ChallengeService challengeService;
+
 }

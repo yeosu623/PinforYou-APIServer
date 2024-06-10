@@ -1,6 +1,7 @@
 package YU.PinforYouAPIServer.Controller;
 
-import YU.PinforYouAPIServer.Entity.UserEntity_Complex.FriendEntity;
+import YU.PinforYouAPIServer.Entity.UserEntityComplex.ChallengeProgressEntity;
+import YU.PinforYouAPIServer.Entity.UserEntityComplex.FriendEntity;
 import YU.PinforYouAPIServer.Entity.UserEntity;
 import YU.PinforYouAPIServer.Repository.UserRepository;
 import YU.PinforYouAPIServer.Service.UserService;
@@ -31,32 +32,6 @@ public class UserController {
         UserEntity user = userRepository.get(user_id);
 
         String outputJson = mapper.writeValueAsString(user);
-        return new ResponseEntity<>(outputJson, HttpStatus.OK);
-    }
-
-    @GetMapping("/user/addFriend")
-    @ResponseBody
-    public ResponseEntity<String> addFriend(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendEntity.class).getFriend_id();
-
-        userService.add_friend(user_id, friend_id);
-
-        String outputJson = mapper.writeValueAsString(userRepository.getFriend_useThis(user_id));
-
-        return new ResponseEntity<>(outputJson, HttpStatus.OK);
-    }
-
-    @GetMapping("/user/deleteFriend")
-    @ResponseBody
-    public ResponseEntity<String> deleteFriend(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendEntity.class).getFriend_id();
-
-        userService.remove_friend(user_id, friend_id);
-
-        String outputJson = mapper.writeValueAsString(userRepository.getFriend_useThis(user_id));
-
         return new ResponseEntity<>(outputJson, HttpStatus.OK);
     }
 }
