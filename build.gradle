@@ -30,6 +30,10 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j' // mysql
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+	// 지인 추가 dependency
+	// implementation 'org.springframework.security:spring-security-core'	// 보안 강화 및 비밀번호 해싱을 위한 의존성
 }
 
 tasks.named('test') {
