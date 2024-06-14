@@ -8,13 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
 public class LocalLogin {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalLogin.class);
@@ -32,7 +30,7 @@ public class LocalLogin {
             UserEntity user = userOptional.get();
             if (user.getPw().equals(loginInfo.getPw())) {
                 logger.info("Login successful for user: {}", user.getId());
-                return ResponseEntity.ok(new LocalLoginResponseDTO(user.getId()));
+                return ResponseEntity.ok(new LocalLoginResponseDTO(user.getUser_id()));
             }
             else {
                 logger.warn("Invalid password for user: {}", user.getId());

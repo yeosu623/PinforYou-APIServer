@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class LocalLoginResponseDTO {
 
-    private String userId;
+    private Integer user_id;
 
-    public LocalLoginResponseDTO(String userId) {
-        this.userId = userId;
+    public LocalLoginResponseDTO(Integer user_id) {
+        this.user_id = user_id;
     }
 }
