@@ -19,10 +19,21 @@ public class UserCardService {
     @Autowired
     UserCardRepository userCardRepository;
 
-    public void card_recommend_by_store(Integer user_id, String category, String store_name) {
+    public List<UserCardEntity> card_recommend_by_store(Integer user_id, String category, String store_name) {
         CardBenefitAlgorithm algorithm = new CardBenefitAlgorithm();
 
-        List<UserCardEntity> user_cards = userCardRepository.findByUserId(user_id);
+        List<Integer> cards_id = new ArrayList<>();
+        List<UserCardEntity> cards = userCardRepository.findByUserId(user_id);
+        for(UserCardEntity card : cards) {
+            cards_id.add(card.getCard_id());
+        }
 
+        List<UserCardEntity> selected_cards = new ArrayList<>();
+        List<Integer> selected_cards_id = algorithm.calculate(cards_id);
+        for(Integer selected_card_id : selected_cards_id) {
+            selected_cards.add(userCardRepository.findByUserAndCardId(user_id, selected_card_id));
+        }
+
+        return selected_cards;
     }
 }

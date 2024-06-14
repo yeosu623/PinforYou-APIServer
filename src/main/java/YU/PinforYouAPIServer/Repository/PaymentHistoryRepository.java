@@ -1,12 +1,14 @@
 package YU.PinforYouAPIServer.Repository;
 
 import YU.PinforYouAPIServer.Entity.PaymentHistoryEntity;
+import YU.PinforYouAPIServer.Entity.UserCardEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -40,5 +42,12 @@ public class PaymentHistoryRepository {
     public void delete(Integer payment_id) {
         PaymentHistoryEntity payment = em.find(PaymentHistoryEntity.class, payment_id);
         em.remove(payment);
+    }
+
+    public List<PaymentHistoryEntity> findByUserAndCardId(Integer user_id, Integer card_id) {
+        return em.createQuery("select p from payment_history p where p.user_id = :user_id and p.card_id = :card_id", PaymentHistoryEntity.class)
+                .setParameter("user_id", user_id)
+                .setParameter("card_id", card_id)
+                .getResultList();
     }
 }

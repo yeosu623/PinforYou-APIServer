@@ -38,6 +38,15 @@ public class UserCardRepository {
     }
 
     public List<UserCardEntity> findByUserId(Integer user_id) {
-        return em.createQuery("select u from user_card u where u.user_id = user_id", UserCardEntity.class).getResultList();
+        return em.createQuery("select u from user_card u where u.user_id = :user_id", UserCardEntity.class)
+                 .setParameter("user_id", user_id)
+                 .getResultList();
+    }
+
+    public UserCardEntity findByUserAndCardId(Integer user_id, Integer card_id) {
+        return em.createQuery("select u from user_card u where u.user_id = :user_id and u.card_id = :card_id", UserCardEntity.class)
+                .setParameter("user_id", user_id)
+                .setParameter("card_id", card_id)
+                .getSingleResult();
     }
 }
