@@ -1,9 +1,12 @@
 package YU.PinforYouAPIServer.Controller;
 
+import YU.PinforYouAPIServer.Entity.CardEntity;
 import YU.PinforYouAPIServer.Entity.PaymentHistoryEntity;
 import YU.PinforYouAPIServer.Entity.UserCardEntity;
 import YU.PinforYouAPIServer.Entity.UserEntity;
+import YU.PinforYouAPIServer.Repository.CardRepository;
 import YU.PinforYouAPIServer.Repository.PaymentHistoryRepository;
+import YU.PinforYouAPIServer.Repository.UserCardRepository;
 import YU.PinforYouAPIServer.Service.PaymentHistoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,50 +31,65 @@ public class PaymentHistoryController {
     PaymentHistoryService paymentHistoryService;
     @Autowired
     PaymentHistoryRepository paymentHistoryRepository;
+    @Autowired
+    CardRepository cardRepository;
+    @Autowired
+    UserCardRepository userCardRepository;
 
-    // 작업중
-//    @GetMapping("/paymentHistory")
-//    @ResponseBody
-//    public ResponseEntity<String> getPaymentHistory(@RequestBody String inputJson) throws JsonProcessingException {
-//
-//        @Getter @Setter
-//        class InJsonFormat { // 로컬 클래스. 메서드 밖에서 접근 불가
-//            private Integer user_id;
-//            private Integer card_id;
-//        }
-//        Integer user_id = mapper.readValue(inputJson, InJsonFormat.class).getUser_id();
-//        Integer card_id = mapper.readValue(inputJson, InJsonFormat.class).getUser_id();
-//        List<PaymentHistoryEntity> payments = paymentHistoryRepository.findByUserAndCardId(user_id, card_id);
-//
-//        @Getter @Setter
-//        class OutJsonFormat { // 로컬 클래스. 메서드 밖에서 접근 불가
-//            private Integer user_id;
-//            private Integer card_id;
-//            private String card_name;
-//            private String card_num;
-//            private String card_color;
-//
-//            List<OutJsonFormat_inner> payments;
-//            static class OutJsonFormat_inner {
-//                private Integer pay_amount;
-//                private Date purchase_date;
-//                private String store_name;
-//                private String category;
-//            }
-//        }
-//        OutJsonFormat outJsonFormat = new OutJsonFormat();
-//        outJsonFormat.user_id = user_id;
-//        outJsonFormat.card_id = card_id;
-//        outJsonFormat.card_name = payments.
-//        List<OutJsonFormat> outJsonFormats = new ArrayList<>();
-//        for(PaymentHistoryEntity payment : payments) {
-//
-//            outJsonFormats.add(outJsonFormat);
-//        }
-//
-//        String outputJson = mapper.writeValueAsString(outJsonFormats);
-//        return new ResponseEntity<>(outputJson, HttpStatus.OK);
-//    }
+
+    @Getter @Setter
+    static class InJsonFormat_getPaymentHistory {
+        private Integer user_id;
+        private Integer card_id;
+    }
+    @Getter @Setter
+    static class OutJsonFormat_getPaymentHistory {
+        private Integer user_id;
+        private Integer card_id;
+        private String card_name;
+        private String card_num;
+        private String card_color;
+
+        List<OutJsonFormat_getPaymentHistory_Inner> payments = new ArrayList<>();
+    }
+    @Getter @Setter
+    static class OutJsonFormat_getPaymentHistory_Inner {
+        private Integer pay_amount;
+        private String purchase_date;
+        private String store_name;
+        private String category;
+    }
+
+    @GetMapping("/paymentHistory")
+    @ResponseBody
+    public ResponseEntity<String> getPaymentHistory(@RequestBody String inputJson) throws JsonProcessingException {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Integer user_id = mapper.readValue(inputJson, InJsonFormat_getPaymentHistory.class).getUser_id();
+        Integer card_id = mapper.readValue(inputJson, InJsonFormat_getPaymentHistory.class).getCard_id();
+        List<PaymentHistoryEntity> paymentHistories = paymentHistoryRepository.findByUserAndCardId(user_id, card_id);
+
+        OutJsonFormat_getPaymentHistory outJsonFormat = new OutJsonFormat_getPaymentHistory();
+        outJsonFormat.setUser_id(user_id);
+        outJsonFormat.setCard_id(card_id);
+        outJsonFormat.setCard_name(cardRepository.get(card_id).getCard_name());
+        outJsonFormat.setCard_num(userCardRepository.findByUserAndCardId(user_id, card_id).getCard_num());
+        outJsonFormat.setCard_color(cardRepository.get(card_id).getCard_color());
+        for(PaymentHistoryEntity paymentHistory : paymentHistories) {
+            OutJsonFormat_getPaymentHistory_Inner inner = new OutJsonFormat_getPaymentHistory_Inner();
+            inner.setPay_amount(paymentHistory.getPay_amount());
+            inner.setPurchase_date(dateFormat.format(paymentHistory.getPurchase_date()));
+            inner.setStore_name(paymentHistory.getStore_name());
+            inner.setCategory(paymentHistory.getCategory());
+
+            outJsonFormat.payments.add(inner);
+        }
+
+        String outputJson = mapper.writeValueAsString(outJsonFormat);
+        return new ResponseEntity<>(outputJson, HttpStatus.OK);
+    }
+
     @PostMapping("/paymentHistory")
     @ResponseBody
     public ResponseEntity<Void> savePaymentHistory(@RequestBody String inputJson) throws JsonProcessingException {

@@ -4,6 +4,7 @@ import YU.PinforYouAPIServer.Entity.PaymentHistoryEntity;
 import YU.PinforYouAPIServer.Entity.UserCardEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.text.ParseException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@Transactional
 public class PaymentHistoryRepository {
 
     @PersistenceContext
@@ -21,8 +23,8 @@ public class PaymentHistoryRepository {
         return em.find(PaymentHistoryEntity.class, payment_id);
     }
 
-    public void post(PaymentHistoryEntity PaymentHistoryEntity) {
-        em.persist(PaymentHistoryEntity);
+    public void post(PaymentHistoryEntity paymentHistory) {
+        em.persist(paymentHistory);
     }
 
     public void put(Integer payment_id, Map<String, String> args) throws ParseException {

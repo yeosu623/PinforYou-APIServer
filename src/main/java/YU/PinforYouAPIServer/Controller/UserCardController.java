@@ -29,7 +29,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserCardController {
@@ -93,8 +95,10 @@ public class UserCardController {
 
             outJsonFormats.add(outJsonFormat);
         }
+        Map<String, ArrayList<outJsonFormat_userCardInfo>> outJsonFormats1 = new HashMap<>();
+        outJsonFormats1.put("card_list", outJsonFormats);
 
-        String outputJson = mapper.writeValueAsString(outJsonFormats);
+        String outputJson = mapper.writeValueAsString(outJsonFormats1);
         return new ResponseEntity<>(outputJson, HttpStatus.OK);
     }
 

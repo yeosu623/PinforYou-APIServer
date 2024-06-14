@@ -1,5 +1,6 @@
 package YU.PinforYouAPIServer.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class PaymentHistoryEntity {
     private Integer pay_amount;
 
     @Column
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date purchase_date;
 
     @Column
