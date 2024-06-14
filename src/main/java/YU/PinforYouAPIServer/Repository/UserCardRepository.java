@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -33,5 +35,9 @@ public class UserCardRepository {
     public void delete(Integer user_card_id) {
         UserCardEntity user_card = em.find(UserCardEntity.class, user_card_id);
         em.remove(user_card);
+    }
+
+    public List<UserCardEntity> findByUserId(Integer user_id) {
+        return em.createQuery("select u from user_card u where u.user_id = user_id", UserCardEntity.class).getResultList();
     }
 }
