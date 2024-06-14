@@ -15,5 +15,4 @@ public class LocalRegisterDTO {
     private String sex;
     private Integer age;
     private String interest;
-
 }

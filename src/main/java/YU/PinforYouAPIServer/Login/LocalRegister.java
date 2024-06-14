@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
 public class LocalRegister {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalRegister.class);
@@ -30,7 +29,7 @@ public class LocalRegister {
         Optional<UserEntity> userOptional = loginService.findById(registerDto.getId());
 
         if (userOptional.isPresent()){
-            logger.warn("This id alredy Exist : {}", registerDto.getId());
+            logger.warn("This id already Exist : {}", registerDto.getId());
             return ResponseEntity.status(409).body("Id already exist");
         }
         // User 정보 세팅
@@ -42,6 +41,12 @@ public class LocalRegister {
         user.setSex(registerDto.getSex());
         user.setAge(registerDto.getAge());
         user.setInterest(registerDto.getInterest());
+        user.setPoint(0);
+        user.setFriend("");
+        user.setChallenge_progress("");
+        user.setItem_list("");
+        user.setFriend_request("");
+        user.setGroup_request("");
 
         // 사용자 정보 저장
         loginService.save(user);
