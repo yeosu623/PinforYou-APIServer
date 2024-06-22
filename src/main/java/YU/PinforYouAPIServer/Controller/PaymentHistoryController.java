@@ -1,9 +1,7 @@
 package YU.PinforYouAPIServer.Controller;
 
-import YU.PinforYouAPIServer.Entity.CardEntity;
 import YU.PinforYouAPIServer.Entity.PaymentHistoryEntity;
-import YU.PinforYouAPIServer.Entity.UserCardEntity;
-import YU.PinforYouAPIServer.Entity.UserEntity;
+import YU.PinforYouAPIServer.Other.Percent;
 import YU.PinforYouAPIServer.Repository.CardRepository;
 import YU.PinforYouAPIServer.Repository.PaymentHistoryRepository;
 import YU.PinforYouAPIServer.Repository.UserCardRepository;
@@ -27,21 +25,11 @@ public class PaymentHistoryController {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    PaymentHistoryService paymentHistoryService;
-    @Autowired
-    PaymentHistoryRepository paymentHistoryRepository;
-    @Autowired
-    CardRepository cardRepository;
-    @Autowired
-    UserCardRepository userCardRepository;
+    @Autowired PaymentHistoryService paymentHistoryService;
+    @Autowired PaymentHistoryRepository paymentHistoryRepository;
+    @Autowired CardRepository cardRepository;
+    @Autowired UserCardRepository userCardRepository;
 
-
-    @Getter @Setter
-    static class InJsonFormat_getPaymentHistory {
-        private Integer user_id;
-        private Integer card_id;
-    }
     @Getter @Setter
     static class OutJsonFormat_getPaymentHistory {
         private Integer user_id;
@@ -62,12 +50,13 @@ public class PaymentHistoryController {
 
     @GetMapping("/paymentHistory")
     @ResponseBody
-    public ResponseEntity<String> getPaymentHistory(@RequestBody String inputJson) throws JsonProcessingException {
+    public ResponseEntity<String> getPaymentHistory(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("card_id") Integer card_id
+    ) throws JsonProcessingException {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        Integer user_id = mapper.readValue(inputJson, InJsonFormat_getPaymentHistory.class).getUser_id();
-        Integer card_id = mapper.readValue(inputJson, InJsonFormat_getPaymentHistory.class).getCard_id();
         List<PaymentHistoryEntity> paymentHistories = paymentHistoryRepository.findByUserAndCardId(user_id, card_id);
 
         OutJsonFormat_getPaymentHistory outJsonFormat = new OutJsonFormat_getPaymentHistory();
@@ -92,17 +81,25 @@ public class PaymentHistoryController {
 
     @PostMapping("/paymentHistory")
     @ResponseBody
-    public ResponseEntity<Void> savePaymentHistory(@RequestBody String inputJson) throws JsonProcessingException {
+    public ResponseEntity<String> savePaymentHistory(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("card_id") Integer card_id,
+            @RequestParam("pay_amount") Integer pay_amount,
+            @RequestParam("store_name") String store_name,
+            @RequestParam("category") String category
+    ){
+        Percent percent = new Percent();
 
         PaymentHistoryEntity payment = new PaymentHistoryEntity();
-        payment.setUser_id(mapper.readValue(inputJson, PaymentHistoryEntity.class).getUser_id());
-        payment.setCard_id(mapper.readValue(inputJson, PaymentHistoryEntity.class).getCard_id());
-        payment.setPay_amount(mapper.readValue(inputJson, PaymentHistoryEntity.class).getPay_amount());
-        payment.setPurchase_date(mapper.readValue(inputJson, PaymentHistoryEntity.class).getPurchase_date());
-        payment.setStore_name(mapper.readValue(inputJson, PaymentHistoryEntity.class).getStore_name());
-        payment.setCategory(mapper.readValue(inputJson, PaymentHistoryEntity.class).getCategory());
-
+        payment.setUser_id(user_id);
+        payment.setCard_id(card_id);
+        payment.setPay_amount((int)(pay_amount * percent.get_percent(card_id)));
+        payment.setPurchase_date(new Date());
+        payment.setStore_name(store_name);
+        payment.setCategory(category);
         paymentHistoryRepository.post(payment);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+
+        return new ResponseEntity<>("결제 내역 저장 완료", HttpStatus.OK);
     }
 }

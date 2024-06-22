@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -22,13 +22,15 @@ public class LocalLogin {
 
     // 로컬 로그인을 하여 UserId를 반환하기
     @PostMapping("/localLogin")
-    public ResponseEntity<?> localLogin(@RequestBody LocalLoginDTO loginInfo){
-
-        Optional<UserEntity> userOptional = loginService.findById(loginInfo.getId());
+    public ResponseEntity<?> localLogin(
+            @RequestParam("id") String id,
+            @RequestParam("pw") String pw
+    ){
+        Optional<UserEntity> userOptional = loginService.findById(id);
 
         if (userOptional.isPresent()){
             UserEntity user = userOptional.get();
-            if (user.getPw().equals(loginInfo.getPw())) {
+            if (user.getPw().equals(pw)) {
                 logger.info("Login successful for user: {}", user.getId());
                 return ResponseEntity.ok(new LocalLoginResponseDTO(user.getUser_id()));
             }

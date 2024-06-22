@@ -29,9 +29,7 @@ public class FriendRequestController {
 
     @GetMapping("/user/friend/request")
     @ResponseBody
-    public ResponseEntity<String> showFriendRequest(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendRequestEntity.class).getUser_id();
-
+    public ResponseEntity<String> showFriendRequest(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
         String outputJson = mapper.writeValueAsString(friendRequestRepository.getFriendRequest(user_id));
 
         return new ResponseEntity<>(outputJson, HttpStatus.OK);
@@ -39,10 +37,10 @@ public class FriendRequestController {
 
     @PostMapping("/user/friend/request")
     @ResponseBody
-    public ResponseEntity<String> addFriendRequest(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendRequestEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendRequestEntity.class).getFriend_id();
-
+    public ResponseEntity<String> addFriendRequest(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("friend_id") Integer friend_id
+    ) throws JsonProcessingException {
         friendRequestService.add_friend_request(user_id, friend_id);
 
         String outputJson = mapper.writeValueAsString(friendRequestRepository.getFriendRequest(user_id));
@@ -52,10 +50,10 @@ public class FriendRequestController {
 
     @PutMapping("/user/friend/request")
     @ResponseBody
-    public ResponseEntity<String> acceptFriendRequest(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendRequestEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendRequestEntity.class).getFriend_id();
-
+    public ResponseEntity<String> acceptFriendRequest(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("friend_id") Integer friend_id
+    ) throws JsonProcessingException {
         friendRequestService.accept_friend_request(user_id, friend_id);
 
         String outputJson = mapper.writeValueAsString(friendRequestRepository.getFriendRequest(user_id));
@@ -65,10 +63,10 @@ public class FriendRequestController {
 
     @DeleteMapping("/user/friend/request")
     @ResponseBody
-    public ResponseEntity<String> deleteFriendRequest(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendRequestEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendRequestEntity.class).getFriend_id();
-
+    public ResponseEntity<String> deleteFriendRequest(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("friend_id") Integer friend_id
+    ) throws JsonProcessingException {
         friendRequestService.remove_friend_request(user_id, friend_id);
 
         String outputJson = mapper.writeValueAsString(friendRequestRepository.getFriendRequest(user_id));

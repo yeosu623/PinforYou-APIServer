@@ -23,9 +23,7 @@ public class FriendController {
     FriendService friendService;
 
     @GetMapping("/user/friend")
-    public ResponseEntity<String> showFriend(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendEntity.class).getUser_id();
-
+    public ResponseEntity<String> showFriend(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
         String outputJson = mapper.writeValueAsString(friendRepository.getFriend(user_id));
 
         return new ResponseEntity<>(outputJson, HttpStatus.OK);
@@ -33,10 +31,10 @@ public class FriendController {
 
     @PostMapping("/user/friend")
     @ResponseBody
-    public ResponseEntity<String> addFriend(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendEntity.class).getFriend_id();
-
+    public ResponseEntity<String> addFriend(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("friend_id") Integer friend_id
+    ) throws JsonProcessingException {
         friendService.add_friend(user_id, friend_id);
 
         String outputJson = mapper.writeValueAsString(friendRepository.getFriend(user_id));
@@ -46,10 +44,10 @@ public class FriendController {
 
     @DeleteMapping ("/user/friend")
     @ResponseBody
-    public ResponseEntity<String> deleteFriend(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, FriendEntity.class).getUser_id();
-        Integer friend_id = mapper.readValue(inputJson, FriendEntity.class).getFriend_id();
-
+    public ResponseEntity<String> deleteFriend(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("friend_id") Integer friend_id
+    ) throws JsonProcessingException {
         friendService.remove_friend(user_id, friend_id);
 
         String outputJson = mapper.writeValueAsString(friendRepository.getFriend(user_id));

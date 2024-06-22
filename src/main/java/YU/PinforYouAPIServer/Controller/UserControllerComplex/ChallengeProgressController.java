@@ -24,9 +24,7 @@ public class ChallengeProgressController {
 
     @GetMapping("user/challenge")
     @ResponseBody
-    public ResponseEntity<String> showChallenge(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, ChallengeProgressEntity.class).getUser_id();
-
+    public ResponseEntity<String> showChallenge(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
         String outputJson = mapper.writeValueAsString(challengeProgressRepository.getChallengeProgress(user_id));
 
         return new ResponseEntity<>(outputJson, HttpStatus.OK);
@@ -35,10 +33,10 @@ public class ChallengeProgressController {
 
     @PostMapping("user/challenge")
     @ResponseBody
-    public ResponseEntity<String> startChallenge(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, ChallengeProgressEntity.class).getUser_id();
-        Integer challenge_id = mapper.readValue(inputJson, ChallengeProgressEntity.class).getChallenge_id();
-
+    public ResponseEntity<String> startChallenge(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("challenge_id") Integer challenge_id
+    ) throws JsonProcessingException {
         challengeProgressService.start_challenge(user_id, challenge_id);
 
         String outputJson = mapper.writeValueAsString(challengeProgressRepository.getChallengeProgress(user_id));
@@ -48,10 +46,10 @@ public class ChallengeProgressController {
 
     @PutMapping("user/challenge")
     @ResponseBody
-    public ResponseEntity<String> increase_challenge(@RequestBody String inputJson) throws JsonProcessingException, CloneNotSupportedException {
-        Integer user_id = mapper.readValue(inputJson, ChallengeProgressEntity.class).getUser_id();
-        Integer challenge_id = mapper.readValue(inputJson, ChallengeProgressEntity.class).getChallenge_id();
-
+    public ResponseEntity<String> increase_challenge(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("challenge_id") Integer challenge_id
+    ) throws JsonProcessingException, CloneNotSupportedException {
         challengeProgressService.increase_challenge(user_id, challenge_id);
 
         String outputJson = mapper.writeValueAsString(challengeProgressRepository.getChallengeProgress(user_id));

@@ -3,6 +3,7 @@ package YU.PinforYouAPIServer.Controller;
 import YU.PinforYouAPIServer.Entity.CardEntity;
 import YU.PinforYouAPIServer.Entity.UserCardEntity;
 import YU.PinforYouAPIServer.Entity.UserEntity;
+import YU.PinforYouAPIServer.Other.Percent;
 import YU.PinforYouAPIServer.Other.QRCode;
 import YU.PinforYouAPIServer.Repository.CardRepository;
 import YU.PinforYouAPIServer.Repository.UserCardRepository;
@@ -20,46 +21,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class UserCardController {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    CardRepository cardRepository;
-    @Autowired
-    UserCardService userCardService;
-    @Autowired
-    UserCardRepository userCardRepository;
-
-    @GetMapping("/userCard")
-    @ResponseBody
-    public ResponseEntity<String> userCardInfo(@RequestBody String inputJson) throws JsonProcessingException {
-        Integer user_id = mapper.readValue(inputJson, UserEntity.class).getUser_id();
-        List<UserCardEntity> userCard = userCardRepository.findByUserId(user_id);
-
-        String outputJson = mapper.writeValueAsString(userCard);
-        return new ResponseEntity<>(outputJson, HttpStatus.OK);
-    }
+    @Autowired CardRepository cardRepository;
+    @Autowired UserCardService userCardService;
+    @Autowired UserCardRepository userCardRepository;
 
     @Getter @Setter
-    static class InJsonFormat_userCardInfo {
-        private Integer user_id;
-        private String store_name;
-        private String category;
+    static class outJsonFormat_show {
+        private Integer card_id;
+        private String card_name;
+        private String card_num;
     }
 
     @Getter @Setter
@@ -72,14 +54,45 @@ public class UserCardController {
         private String card_color;
     }
 
+    @Getter @Setter
+    static class outJsonFormat_QR {
+        private Integer user_id;
+        private Integer card_id;
+    }
+
+    @GetMapping("/userCard")
+    @ResponseBody
+    public ResponseEntity<String> showUserCard(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
+        List<UserCardEntity> userCards = userCardRepository.findByUserId(user_id);
+        List<outJsonFormat_show> jsonFormats = new ArrayList<>();
+
+        for(UserCardEntity userCard : userCards) {
+            outJsonFormat_show jsonFormat = new outJsonFormat_show();
+            jsonFormat.card_id = userCard.getCard_id();
+            jsonFormat.card_name = cardRepository.get(userCard.getCard_id()).getCard_name();
+            jsonFormat.card_num = userCard.getCard_num();
+
+            jsonFormats.add(jsonFormat);
+        }
+
+        Map<String, List<outJsonFormat_show>> jsonFormats1 = new HashMap<>();
+        jsonFormats1.put("userCard_list", jsonFormats);
+
+        String outputJson = mapper.writeValueAsString(jsonFormats1);
+        return new ResponseEntity<>(outputJson, HttpStatus.OK);
+    }
+
     @GetMapping("/userCard/payRecommend")
     @ResponseBody
-    public ResponseEntity<String> userCardPayRecommend(@RequestBody String inputJson) throws JsonProcessingException {
+    public ResponseEntity<String> userCardPayRecommend(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("store_name") String store_name,
+            @RequestParam("category") String category
+    ) throws JsonProcessingException {
+        Percent percent = new Percent();
+        percent.reset();
 
-        Integer user_id = mapper.readValue(inputJson, InJsonFormat_userCardInfo.class).getUser_id();
-        String store_name = mapper.readValue(inputJson, InJsonFormat_userCardInfo.class).getStore_name();
-        String store_category = mapper.readValue(inputJson, InJsonFormat_userCardInfo.class).getCategory();
-        List<UserCardEntity> user_cards = userCardService.card_recommend_by_store(user_id, store_category, store_name);
+        List<UserCardEntity> user_cards = userCardService.card_recommend_by_store(user_id, category, store_name);
 
         outJsonFormat_userCardInfo outJsonFormat;
         ArrayList<outJsonFormat_userCardInfo> outJsonFormats = new ArrayList<>();
@@ -90,7 +103,7 @@ public class UserCardController {
             outJsonFormat.card_id = user_card.getCard_id();
             outJsonFormat.card_name = cardRepository.get(outJsonFormat.getCard_id()).getCard_name();
             outJsonFormat.card_last_num = user_card.getCard_num().substring(15); // 맨 뒤 4자리
-            outJsonFormat.discount_percentage = 10;
+            outJsonFormat.discount_percentage = 100 - (int)(percent.set_card(user_card.getCard_id()) * 100);
             outJsonFormat.card_color = cardRepository.get(outJsonFormat.getCard_id()).getCard_color();
 
             outJsonFormats.add(outJsonFormat);
@@ -104,9 +117,16 @@ public class UserCardController {
 
     @GetMapping("/userCard/pay")
     @ResponseBody
-    public ResponseEntity<ResponseEntity<byte[]>> userCardPay(@RequestBody String inputJson) throws IOException, WriterException {
+    public ResponseEntity<ResponseEntity<byte[]>> userCardPay(
+            @RequestParam("user_id") Integer user_id,
+            @RequestParam("card_id") Integer card_id
+    ) throws IOException, WriterException {
+        outJsonFormat_QR jsonFormat = new outJsonFormat_QR();
+        jsonFormat.setUser_id(user_id);
+        jsonFormat.setCard_id(card_id);
+        String json = mapper.writeValueAsString(jsonFormat);
 
         QRCode qrCode = new QRCode();
-        return new ResponseEntity<>(qrCode.generate(inputJson), HttpStatus.OK);
+        return new ResponseEntity<>(qrCode.generate(json), HttpStatus.OK);
     }
 }

@@ -16,8 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserCardService {
 
-    @Autowired
-    UserCardRepository userCardRepository;
+    @Autowired UserCardRepository userCardRepository;
 
     public List<UserCardEntity> card_recommend_by_store(Integer user_id, String category, String store_name) {
         CardBenefitAlgorithm algorithm = new CardBenefitAlgorithm();
