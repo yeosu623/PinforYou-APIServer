@@ -1,9 +1,6 @@
 package YU.PinforYouAPIServer.Controller;
 
-import YU.PinforYouAPIServer.Controller.JSONFormat.ShowUserCard;
-import YU.PinforYouAPIServer.Entity.Card;
 import YU.PinforYouAPIServer.Entity.UserCard;
-import YU.PinforYouAPIServer.Repository.UserCardRepository;
 import YU.PinforYouAPIServer.Repository.UserRepository;
 import YU.PinforYouAPIServer.Service.UserCardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -53,23 +50,24 @@ public class UserCardController {
             ]
         }
          */
+        // json 포맷 생성
+        Map<String, Object> map1 = new HashMap<>();
+        Map<String, Object> map2 = new HashMap<>();
+        List<Object> list1 = new ArrayList<>();
 
-        // JSON을 채울때는 안쪽부터 채운다. 여기서는 배열 객체 채우기.
-        List<ShowUserCard> list1 = new ArrayList<>();
-        for(UserCard userCard : userCards) {
-            ShowUserCard object1 = new ShowUserCard();
-            object1.card_id = userCard.getCard().getId();
-            object1.card_name = userCard.getCard().getCard_name();
-            object1.card_num = userCard.getCard_num();
-
-            list1.add(object1);
-        }
-
-        // JSON의 배깥쪽을 채운다. 여기서는 객체 맨 바깥의 객체 채우기.
-        Map<String, List<ShowUserCard>> map1 = new HashMap<>();
         map1.put("userCard_list", list1);
 
-        String json = mapper.writeValueAsString(map1);
-        return new ResponseEntity<>(json, HttpStatus.OK);
+        for(UserCard userCard : userCards) {
+            map2 = new HashMap<>();
+            map2.put("card_id",   userCard.getCard().getId());
+            map2.put("card_name", userCard.getCard().getCard_name());
+            map2.put("card_num",  userCard.getCard_num());
+
+            list1.add(map2);
+        }
+
+        // json을 string으로 변환한뒤 반환
+        String jsonStr = mapper.writeValueAsString(map1);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }
 }
