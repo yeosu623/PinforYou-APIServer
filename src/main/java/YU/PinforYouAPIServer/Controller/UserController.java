@@ -12,8 +12,6 @@ public class UserController {
     ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    UserService userService;
-    @Autowired
     UserRepository userRepository;
 
 

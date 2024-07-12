@@ -1,7 +1,6 @@
 package YU.PinforYouAPIServer.Repository;
 
 import YU.PinforYouAPIServer.Entity.PaymentHistory;
-import YU.PinforYouAPIServer.Entity.UserCard;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -11,15 +10,19 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class UserCardRepository {
+public class PaymentHistoryRepository {
 
     @PersistenceContext
     EntityManager em;
 
-    public UserCard findByUserAndCardId(Long user_id, Long card_id) {
-        return em.createQuery("select u from user_card u where u.user.id= :user_id and u.card.id = :card_id", UserCard.class)
+    public void save(PaymentHistory paymentHistory) {
+        em.persist(paymentHistory);
+    }
+
+    public List<PaymentHistory> findByUserAndCardId(Long user_id, Long card_id) {
+        return em.createQuery("select p from payment_history p where p.user.id = :user_id and p.card.id = :card_id", PaymentHistory.class)
                 .setParameter("user_id", user_id)
                 .setParameter("card_id", card_id)
-                .getSingleResult();
+                .getResultList();
     }
 }

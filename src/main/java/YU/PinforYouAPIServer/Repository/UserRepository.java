@@ -3,11 +3,13 @@ package YU.PinforYouAPIServer.Repository;
 import YU.PinforYouAPIServer.Entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserRepository {
 
     @PersistenceContext
