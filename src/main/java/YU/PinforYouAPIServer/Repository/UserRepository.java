@@ -10,8 +10,6 @@ import java.util.List;
 @Repository
 public class UserRepository {
 
-    // 객체를 가져오는 부분은 Repository
-
     @PersistenceContext
     EntityManager em;
 

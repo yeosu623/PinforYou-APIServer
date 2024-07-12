@@ -19,7 +19,7 @@ public class UserCard {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
 
@@ -33,6 +33,6 @@ public class UserCard {
 
     public void setCard(Card card) {
         this.card = card;
-        card.setUser_card(this);
+        card.getUser_card().add(this);
     }
 }

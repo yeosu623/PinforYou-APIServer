@@ -30,8 +30,8 @@ public class Card {
     @OneToOne(mappedBy = "card", fetch = FetchType.LAZY)
     private PayEvent pay_event;
 
-    @OneToOne(mappedBy = "card", fetch = FetchType.LAZY)
-    private UserCard user_card;
+    @OneToMany(mappedBy = "card")
+    private List<UserCard> user_card;
 
     @OneToMany(mappedBy = "card")
     private List<Fellowship> fellowships;

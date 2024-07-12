@@ -1,5 +1,6 @@
 package YU.PinforYouAPIServer.Entity;
 
+import YU.PinforYouAPIServer.Category.PaymentCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,10 @@ public class User {
     private String tel;
     private String sex;
     private Long age;
-    private String interest;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentCategory interest;
+
     private Long point;
 
     // "friend_id" : [1,2,3,4]

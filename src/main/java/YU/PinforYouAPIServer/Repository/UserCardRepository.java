@@ -12,6 +12,4 @@ public class UserCardRepository {
 
     @PersistenceContext
     EntityManager em;
-
-
 }
