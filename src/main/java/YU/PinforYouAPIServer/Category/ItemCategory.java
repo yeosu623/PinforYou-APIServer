@@ -1,5 +1,5 @@
 package YU.PinforYouAPIServer.Category;
 
 public enum ItemCategory {
-    DRINK, COFFEE, FOOD, GOODS, ETC
+    음료, 커피, 음식, 굿즈, 기타
 }

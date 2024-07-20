@@ -1,8 +1,10 @@
 package YU.PinforYouAPIServer.Controller;
 
+import YU.PinforYouAPIServer.Entity.Card;
 import YU.PinforYouAPIServer.Entity.UserCard;
 import YU.PinforYouAPIServer.Other.QRCode;
 import YU.PinforYouAPIServer.Repository.UserRepository;
+import YU.PinforYouAPIServer.Service.UserCardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.WriterException;
@@ -15,10 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class UserCardController {
@@ -27,6 +26,8 @@ public class UserCardController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserCardService userCardService;
 
     @GetMapping("/userCard")
     @ResponseBody
@@ -125,6 +126,39 @@ public class UserCardController {
         }
 
         // json을 string으로 변환한뒤 반환
+        String jsonStr = mapper.writeValueAsString(map1);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    /*
+    미완성 : 더미 데이터가 아닌 실제 데이터 적용 필요
+     */
+    @GetMapping("/userCard/newCardRecommend") // 발급 추천
+    @ResponseBody
+    public ResponseEntity<String> showNewCardRecommend(@RequestParam("user_id") Long user_id) throws JsonProcessingException {
+        Card card = userCardService.newCardAlgorithm(user_id);
+
+        /* JSON 포맷
+        {
+           "category": 카페
+           "name": 김성훈이 최고야 카드(Black)
+           "benefits": [
+                "커피, 모바일, 문화 10% 할인",
+                "뷰티, 편의점 5% 할인"
+           ]
+        }
+        */
+
+        Map<String, Object> map1 = new LinkedHashMap<>();
+        List<Object> list1 = new ArrayList<>();
+
+        map1.put("category", "카페");
+        map1.put("name", "김성훈이 최고야 카드(Black)");
+        map1.put("benefits", list1);
+
+        list1.add("카피, 모바일, 문화 10% 할인");
+        list1.add("뷰티, 편의점 5% 할인");
+
         String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }

@@ -1,5 +1,8 @@
 package YU.PinforYouAPIServer.Entity;
 
+import YU.PinforYouAPIServer.Category.PaymentCategory;
+import YU.PinforYouAPIServer.Other.LongListConverter;
+import YU.PinforYouAPIServer.Other.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,4 +41,11 @@ public class Card {
 
     @OneToMany(mappedBy = "card")
     private List<PaymentHistory> payment_histories;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentCategory major_benefit;
+
+    // "benefits_description" : ["aaa", "bbb", "ccc"]
+    @Convert(converter = StringListConverter.class)
+    private List<String> benefits_description;
 }

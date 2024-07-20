@@ -1,6 +1,7 @@
 package YU.PinforYouAPIServer.Entity;
 
 import YU.PinforYouAPIServer.Category.PaymentCategory;
+import YU.PinforYouAPIServer.Other.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,17 +34,20 @@ public class User {
     private Long point;
 
     // "friend_id" : [1,2,3,4]
-    private String friend_ids;
+    @Convert(converter = LongListConverter.class)
+    private List<Long> friend_ids;
 
     // "friend_request" : [1,2,3,4]
-    private String friend_request;
+    @Convert(converter = LongListConverter.class)
+    private List<Long> friend_request;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fellowship_id")
     private Fellowship fellowship;
 
     // "group_request" : [1,2,3,4]
-    private String fellowship_request;
+    @Convert(converter = LongListConverter.class)
+    private List<Long> fellowship_request;
 
     @OneToMany(mappedBy = "user")
     private List<ChallengeProgress> progresses = new ArrayList<>();
