@@ -1,0 +1,11 @@
+# MySQL Config
+spring:
+  application:
+    name: PinforYou-APIServer
+  datasource:
+    url: jdbc:mysql://pinforyoudb.online/db
+    username: admin
+    password: admin1234
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
