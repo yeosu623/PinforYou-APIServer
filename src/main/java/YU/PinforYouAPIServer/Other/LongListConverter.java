@@ -1,6 +1,7 @@
 package YU.PinforYouAPIServer.Other;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -28,7 +29,7 @@ public class LongListConverter implements AttributeConverter<List<Long>, String>
         if(data.isEmpty()) return new ArrayList<>();
 
         try {
-            return mapper.readValue(data, List.class);
+            return mapper.readValue(data, new TypeReference<ArrayList<Long>>(){});
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

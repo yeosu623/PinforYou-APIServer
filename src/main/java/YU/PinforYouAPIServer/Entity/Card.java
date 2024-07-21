@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "card")
@@ -47,5 +48,5 @@ public class Card {
 
     // "benefits_description" : ["aaa", "bbb", "ccc"]
     @Convert(converter = StringListConverter.class)
-    private List<String> benefits_description;
+    private List<String> benefits_description = new ArrayList<>();
 }

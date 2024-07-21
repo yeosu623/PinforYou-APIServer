@@ -35,11 +35,11 @@ public class User {
 
     // "friend_id" : [1,2,3,4]
     @Convert(converter = LongListConverter.class)
-    private List<Long> friend_ids;
+    private List<Long> friend_ids = new ArrayList<>();
 
     // "friend_request" : [1,2,3,4]
     @Convert(converter = LongListConverter.class)
-    private List<Long> friend_request;
+    private List<Long> friend_request = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fellowship_id")
@@ -47,7 +47,7 @@ public class User {
 
     // "group_request" : [1,2,3,4]
     @Convert(converter = LongListConverter.class)
-    private List<Long> fellowship_request;
+    private List<Long> fellowship_request = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<ChallengeProgress> progresses = new ArrayList<>();
