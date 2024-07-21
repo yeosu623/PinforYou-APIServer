@@ -55,6 +55,7 @@ public class ItemListController {
                     "barcode": "1999-9999-9999-0000"
                 }
             ]
+        }
          */
 
         Map<String, Object> map1 = new LinkedHashMap<>();
