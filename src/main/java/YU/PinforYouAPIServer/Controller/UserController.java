@@ -23,4 +23,47 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @GetMapping("/friend")
+    @ResponseBody
+    public ResponseEntity<String> showFriends(@RequestParam("user_id") Long user_id) throws JsonProcessingException {
+        User user = userRepository.findOne(user_id);
+
+        /* JSON 포맷
+        {
+            "friend": [
+                {
+                    "friend_id": 2
+                    "name": "이준수"
+                },
+                {
+                    "friend_id": 4
+                    "name": "박태현"
+                },
+                {
+                    "friend_id": 9
+                    "name": "김이박"
+                }
+            ]
+        }
+        */
+
+        Map<String, Object> map1 = new LinkedHashMap<>();
+        Map<String, Object> map2 = new LinkedHashMap<>();
+        List<Object> list1 = new ArrayList<>();
+
+        map1.put("friend", list1);
+
+        for(Long friend_id : user.getFriend_ids()) {
+            map2 = new LinkedHashMap<>();
+
+            map2.put("friend_id", friend_id);
+            map2.put("name", userRepository.findOne(friend_id).getNickname());
+
+            list1.add(map2);
+        }
+
+        String jsonStr = mapper.writeValueAsString(map1);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
 }

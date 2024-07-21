@@ -27,6 +27,6 @@ public class PointShop {
 
     private String image_url;
 
-    @OneToMany(mappedBy = "item")
-    private List<ItemList> item_lists;
+    @OneToMany(mappedBy = "product")
+    private List<ItemList> product_lists;
 }

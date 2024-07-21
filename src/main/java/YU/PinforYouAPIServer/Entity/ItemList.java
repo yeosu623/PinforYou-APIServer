@@ -33,6 +33,6 @@ public class ItemList {
 
     public void setItem(PointShop item) {
         this.product = item;
-        item.getItem_lists().add(this);
+        item.getProduct_lists().add(this);
     }
 }

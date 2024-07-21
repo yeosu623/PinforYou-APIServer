@@ -72,6 +72,8 @@ public class ItemListController {
             map2.put("image_url", product.getImage_url());
             map2.put("category", product.getCategory());
             map2.put("barcode", item.getBarcode());
+
+            list1.add(map2);
         }
 
         String jsonStr = mapper.writeValueAsString(map1);
