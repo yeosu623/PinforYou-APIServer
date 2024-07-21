@@ -39,7 +39,8 @@ public class ItemListController {
                 {
                     "item_list_id": 1,
                     "item_id": 1,
-                    "name": "스타벅스 아메리카노(G)",
+                    "use_place": "스타벅스",
+                    "name": "아이스 아메리카노(G)",
                     "image_url": "http://...",
                     "category": "카폐"
                     "barcode": "1234-5678-0900-1111"
@@ -47,7 +48,8 @@ public class ItemListController {
                 {
                     "item_list_id": 2,
                     "item_id": 1,
-                    "name": "스타벅스 아메리카노(G)",
+                    "use_place": "스타벅스",
+                    "name": "아이스 아메리카노(G)",
                     "image_url": "http://...",
                     "category": "카폐"
                     "barcode": "1999-9999-9999-0000"
@@ -68,6 +70,7 @@ public class ItemListController {
 
             map2.put("item_list_id", item.getId());
             map2.put("item_id", product.getId());
+            map2.put("use_place", product.getUse_place());
             map2.put("name", product.getItem_name());
             map2.put("image_url", product.getImage_url());
             map2.put("category", product.getCategory());

@@ -22,7 +22,7 @@ public class PointShop {
     private String use_place;
     private Long item_price;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ItemCategory category;
 
     private String image_url;
