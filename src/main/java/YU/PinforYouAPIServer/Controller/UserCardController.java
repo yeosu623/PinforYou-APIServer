@@ -133,7 +133,7 @@ public class UserCardController {
     @GetMapping("/userCard/newCardRecommend") // 발급 추천
     @ResponseBody
     public ResponseEntity<String> showNewCardRecommend(@RequestParam("user_id") Long user_id) throws JsonProcessingException {
-        Card card = userCardService.newCardAlgorithm(user_id);
+        Card card = userCardService.newCardRecommend(user_id);
 
         /* JSON 포맷
         {
