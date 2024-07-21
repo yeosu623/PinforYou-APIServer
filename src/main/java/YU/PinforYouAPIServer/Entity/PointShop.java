@@ -19,10 +19,13 @@ public class PointShop {
     private Long id;
 
     private String item_name;
+    private String use_place;
     private Long item_price;
 
     @Enumerated
     private ItemCategory category;
+
+    private String image_url;
 
     @OneToMany(mappedBy = "item")
     private List<ItemList> item_lists;

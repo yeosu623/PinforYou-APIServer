@@ -130,9 +130,6 @@ public class UserCardController {
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }
 
-    /*
-    미완성 : 더미 데이터가 아닌 실제 데이터 적용 필요
-     */
     @GetMapping("/userCard/newCardRecommend") // 발급 추천
     @ResponseBody
     public ResponseEntity<String> showNewCardRecommend(@RequestParam("user_id") Long user_id) throws JsonProcessingException {
@@ -150,14 +147,10 @@ public class UserCardController {
         */
 
         Map<String, Object> map1 = new LinkedHashMap<>();
-        List<Object> list1 = new ArrayList<>();
 
-        map1.put("category", "카페");
-        map1.put("name", "김성훈이 최고야 카드(Black)");
-        map1.put("benefits", list1);
-
-        list1.add("카피, 모바일, 문화 10% 할인");
-        list1.add("뷰티, 편의점 5% 할인");
+        map1.put("category", card.getMajor_benefit());
+        map1.put("name", card.getCard_name());
+        map1.put("benefits", card.getBenefits_description());
 
         String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);

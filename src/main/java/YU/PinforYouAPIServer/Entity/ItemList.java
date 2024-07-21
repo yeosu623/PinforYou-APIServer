@@ -21,7 +21,7 @@ public class ItemList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private PointShop item;
+    private PointShop product;
 
     private String barcode;
 
@@ -32,7 +32,7 @@ public class ItemList {
     }
 
     public void setItem(PointShop item) {
-        this.item = item;
+        this.product = item;
         item.getItem_lists().add(this);
     }
 }
