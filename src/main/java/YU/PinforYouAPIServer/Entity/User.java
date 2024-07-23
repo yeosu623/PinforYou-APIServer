@@ -2,6 +2,7 @@ package YU.PinforYouAPIServer.Entity;
 
 import YU.PinforYouAPIServer.Category.PaymentCategory;
 import YU.PinforYouAPIServer.Other.LongListConverter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,7 @@ public class User {
     private List<Long> fellowship_request = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference                                                   //StackOverFlow 방지용
     private List<ChallengeProgress> progresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")

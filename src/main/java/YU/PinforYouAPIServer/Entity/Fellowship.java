@@ -1,6 +1,7 @@
 package YU.PinforYouAPIServer.Entity;
 
 import YU.PinforYouAPIServer.Category.PaymentCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

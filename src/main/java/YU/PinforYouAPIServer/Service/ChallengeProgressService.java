@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,12 +26,14 @@ public class ChallengeProgressService {
         List<ChallengeProgress> progressList = challengeProgressRepository.findByUserId(userId);
 
         return progressList.stream().map(progress -> {
-            Challenge challenge = challengeRepository.findById(progress.getChallenge().getId());
+            // Challenge를 가져오는 데 사용되는 메서드
+            Challenge challenge = challengeRepository.findByChallengeId(progress.getChallenge().getId());
+
             Map<String, Object> progressMap = new HashMap<>();
             progressMap.put("challenge_name", challenge.getName());
             progressMap.put("point", challenge.getPoint());
             progressMap.put("goal", challenge.getGoal());
-            progressMap.put("challenge_id", progress.getChallenge());
+            progressMap.put("challenge_id", progress.getChallenge().getId()); // ID로 변경
             progressMap.put("progress", progress.getProgress());
             progressMap.put("achieved", progress.getAchieved());
             return progressMap;

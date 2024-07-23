@@ -28,10 +28,4 @@ public class ChallengeRepository {
                 .getSingleResult();
     }
 
-    // challenge_id에 해당하는 챌린지 가져오기
-    public Challenge findById(Long challengeId) {
-        return em.createQuery("SELECT c FROM challenge c WHERE c.id = :challengeId", Challenge.class)
-                .setParameter("challengeId", challengeId)
-                .getSingleResult();
-    }
 }

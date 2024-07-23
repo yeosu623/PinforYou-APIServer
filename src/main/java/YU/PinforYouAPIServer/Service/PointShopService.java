@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import YU.PinforYouAPIServer.Category.ItemCategory;
 
 @Service
 public class PointShopService {
@@ -18,8 +19,8 @@ public class PointShopService {
         return pointShopRepository.findAll();
     }
 
-    // 특정 아이템 가져오기
-    public PointShop getItemById(Long id) {
-        return pointShopRepository.findById(id);
+    // 특정 카테고리로 아이템 목록 가져오기
+    public List<PointShop> getItemsByCategory(ItemCategory category) {
+        return pointShopRepository.findByCategory(category);
     }
 }

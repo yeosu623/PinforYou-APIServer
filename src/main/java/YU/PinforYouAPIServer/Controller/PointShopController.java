@@ -23,8 +23,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.Map;
 
+import YU.PinforYouAPIServer.Entity.PointShop;
+import YU.PinforYouAPIServer.Service.PointShopService;
+import YU.PinforYouAPIServer.Category.ItemCategory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
 @RestController
-@RequestMapping("/pointshop")
 public class PointShopController {
 
     ObjectMapper mapper = new ObjectMapper();
@@ -35,11 +45,6 @@ public class PointShopController {
     @Autowired
     PointShopRepository pointShopRepository;
 
-    @Autowired
-    UserRepository UserRepository;
-
-    @Autowired
-    ItemListRepository ItemListRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -110,20 +115,16 @@ public class PointShopController {
     }
 
     // 전체 아이템 목록 가져오기
-    @GetMapping("/items")
+    @GetMapping("/pointShop/items")
     public ResponseEntity<List<PointShop>> getAllItems() {
         List<PointShop> items = pointShopService.getAllItems();
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
-    // 특정 아이템 가져오기
-    @GetMapping("/items/{id}")
-    public ResponseEntity<PointShop> getItemById(@PathVariable Long id) {
-        PointShop item = pointShopService.getItemById(id);
-        if (item != null) {
-            return new ResponseEntity<>(item, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    // 특정 카테고리로 아이템 목록 가져오기
+    @GetMapping("/pointShop/items/category")
+    public ResponseEntity<List<PointShop>> getItemsByCategory(@RequestParam("category") ItemCategory category) {
+        List<PointShop> items = pointShopService.getItemsByCategory(category);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 }

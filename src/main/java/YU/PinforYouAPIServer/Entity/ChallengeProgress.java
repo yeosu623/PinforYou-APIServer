@@ -1,5 +1,7 @@
 package YU.PinforYouAPIServer.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.Setter;
 @Entity(name = "challenge_progress")
 @Getter @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})      //StackOverFlow 방지용
 public class ChallengeProgress {
 
     @Id
@@ -17,10 +20,12 @@ public class ChallengeProgress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
+    @JsonBackReference                       //StackOverFlow 방지용
     private Challenge challenge;
 
     private Long progress;
