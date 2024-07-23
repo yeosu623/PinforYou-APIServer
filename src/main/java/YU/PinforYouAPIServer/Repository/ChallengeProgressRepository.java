@@ -15,14 +15,6 @@ public class ChallengeProgressRepository {
     @PersistenceContext
     EntityManager em;
 
-    // use_id에 해당하는 챌린지 항목 가져오기
-    public List<ChallengeProgress> findByUserIdAndChallengeId(Long user_id, Long challenge_id) {
-        return em.createQuery("select cp from challenge_progress cp where cp.user.id=:user_id and cp.challenge.id=:challenge_id", ChallengeProgress.class)
-                .setParameter("user_id", user_id)
-                .setParameter("challenge_id", challenge_id)
-                .getResultList();
-    }
-
     // Optional 사용
     /*public Optional<ChallengeProgress> findByUserIdAndChallengeId(Long userId, Long challengeId) {
         List<ChallengeProgress> results = em.createQuery("select cp from challenge_progress cp where cp.user.id = :userId and cp.challenge.id = :challengeId", ChallengeProgress.class)
@@ -42,6 +34,14 @@ public class ChallengeProgressRepository {
                 .setParameter("challenge_id", challenge_id)
                 .getSingleResult();
     }*/
+
+    // user_id와 challenge_id에 해당하는 챌린지 진행 상황 가져오기
+    public List<ChallengeProgress> findByUserIdAndChallengeId(Long userId, Long challengeId) {
+        return em.createQuery("SELECT cp FROM challenge_progress cp WHERE cp.user.id = :userId AND cp.challenge.id = :challengeId", ChallengeProgress.class)
+                .setParameter("userId", userId)
+                .setParameter("challengeId", challengeId)
+                .getResultList();
+    }
 
     // user_id에 해당하는 챌린지 진행 상황 가져오기
     public List<ChallengeProgress> findByUserId(Long userId) {
