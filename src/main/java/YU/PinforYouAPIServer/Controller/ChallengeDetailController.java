@@ -63,7 +63,7 @@ public class ChallengeDetailController {
         for (ChallengeProgress progress : challengeProgress) {
             Map<String, Object> progressMap = new HashMap<>();
             progressMap.put("progress", progress.getProgress());
-            progressMap.put("achieved", progress.getAchieve());
+            progressMap.put("achieved", progress.getAchieved());
             challengeProgressList.add(progressMap);
         }
 
