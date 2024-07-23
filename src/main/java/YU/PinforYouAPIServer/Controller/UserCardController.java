@@ -139,6 +139,7 @@ public class UserCardController {
         {
            "category": 카페
            "name": 김성훈이 최고야 카드(Black)
+           "image_url": "https://..."
            "benefits": [
                 "커피, 모바일, 문화 10% 할인",
                 "뷰티, 편의점 5% 할인"
@@ -150,6 +151,7 @@ public class UserCardController {
 
         map1.put("category", card.getMajor_benefit());
         map1.put("name", card.getCard_name());
+        map1.put("image_url", card.getImage_url());
         map1.put("benefits", card.getBenefits_description());
 
         String jsonStr = mapper.writeValueAsString(map1);

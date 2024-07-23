@@ -27,4 +27,8 @@ public class UserRepository {
         return em.createQuery("select u from user u", User.class)
                  .getResultList();
     }
+
+    public User update(User user) {
+        return em.merge(user);
+    }
 }

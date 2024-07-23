@@ -2,7 +2,7 @@ package YU.PinforYouAPIServer.Controller;
 
 import YU.PinforYouAPIServer.Entity.ItemList;
 import YU.PinforYouAPIServer.Entity.PointShop;
-import YU.PinforYouAPIServer.Entity.User;
+import YU.PinforYouAPIServer.Repository.ItemListRepository;
 import YU.PinforYouAPIServer.Repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class ItemListController {
@@ -26,6 +23,9 @@ public class ItemListController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ItemListRepository itemListRepository;
 
     @GetMapping("/itemList")
     @ResponseBody
@@ -82,5 +82,36 @@ public class ItemListController {
 
         String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/itemList/delete")
+    @ResponseBody
+    public ResponseEntity<String> deleteItemList(@RequestParam("item_list_id") Long item_list_id) throws JsonProcessingException {
+        System.out.println("Received request to delete item list with ID: " + item_list_id);
+
+        boolean result = itemListRepository.deleteOne(item_list_id);
+
+        /*
+            프론트에서 item_list_id 전달 받아서 삭제 후 전달
+            {
+                result : 1
+            }
+        */
+
+        if (result) {   // 삭제할 데이터가 있는 경우
+            Map<String, Object> trueResult = new HashMap<>();
+            trueResult.put("result", 1);
+
+            String jsonStr = mapper.writeValueAsString(trueResult);
+            return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+        }
+        else {  // 삭제할 데이터가 없는 경우
+            Map<String, Object> falseResult = new HashMap<>();
+            falseResult.put("result", 0);
+
+            String jsonStr = mapper.writeValueAsString(falseResult);
+            return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+        }
     }
 }
