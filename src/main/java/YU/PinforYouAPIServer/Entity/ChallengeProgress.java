@@ -26,7 +26,7 @@ public class ChallengeProgress {
     private Long progress;
 
     @Column(name = "achieved")
-    private Boolean achieve;
+    private Boolean achieved;
 
     //==연관관계 메서드==//
     public void setUser(User user) {
