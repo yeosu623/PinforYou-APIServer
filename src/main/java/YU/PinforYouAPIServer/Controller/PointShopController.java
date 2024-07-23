@@ -82,6 +82,11 @@ public class PointShopController {
             // 바코드 생성후 저장
             itemListRepository.saveBarcode(itemList);
 
+            // user의 point 차감
+            Long userPoint = userInfo.getPoint() - itemInfo.getItem_price();
+            userInfo.setPoint(userPoint);
+            userRepository.save(userInfo);
+
             Map<String, Object> result = new HashMap<>();
             result.put("success", 1);
 
