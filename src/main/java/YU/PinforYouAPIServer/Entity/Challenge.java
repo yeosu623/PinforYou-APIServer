@@ -18,7 +18,10 @@ public class Challenge {
     @Column(name = "challenge_id")
     private Long id;
 
+    @Column(name = "challenge_name")
     private String name;
+
+    @Column(name = "challenge_info")
     private String info;
 
     @OneToMany(mappedBy = "challenge")

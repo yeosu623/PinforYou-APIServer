@@ -24,6 +24,8 @@ public class ChallengeProgress {
     private Challenge challenge;
 
     private Long progress;
+
+    @Column(name = "achieved")
     private Boolean achieve;
 
     //==연관관계 메서드==//
