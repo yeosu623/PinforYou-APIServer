@@ -21,6 +21,8 @@ public class Fellowship {
     private Long id;
 
     private String fellowship_name;
+    private String description;
+    private Long leader_id;
 
     @OneToMany(mappedBy = "fellowship")
     private List<User> users = new ArrayList<>();

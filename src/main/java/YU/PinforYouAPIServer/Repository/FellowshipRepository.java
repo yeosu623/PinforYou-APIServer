@@ -16,6 +16,14 @@ public class FellowshipRepository {
     @PersistenceContext
     private EntityManager em;
 
+    public void save(Fellowship fellowship) {
+        em.persist(fellowship);
+    }
+
+    public Fellowship find(Long fellowship_id) {
+        return em.find(Fellowship.class, fellowship_id);
+    }
+
     // 모든 Fellowship의 특정 필드만 가져오기
     public List<Object[]> findAllFellowshipsWithSelectedFields() {
         String query = "SELECT f.id, f.fellowship_name, f.card.id, f.category, f.invite_code " + "FROM fellowship f";
