@@ -1,11 +1,14 @@
 package YU.PinforYouAPIServer.Controller;
 
 import YU.PinforYouAPIServer.Category.PaymentCategory;
+import YU.PinforYouAPIServer.Entity.Card;
 import YU.PinforYouAPIServer.Entity.Fellowship;
+import YU.PinforYouAPIServer.Entity.PaymentHistory;
 import YU.PinforYouAPIServer.Entity.User;
 import YU.PinforYouAPIServer.Other.InviteCode;
 import YU.PinforYouAPIServer.Repository.CardRepository;
 import YU.PinforYouAPIServer.Repository.FellowshipRepository;
+import YU.PinforYouAPIServer.Repository.PaymentHistoryRepository;
 import YU.PinforYouAPIServer.Repository.UserRepository;
 import YU.PinforYouAPIServer.Service.FellowshipService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,10 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,6 +35,8 @@ public class FellowshipController {
     private CardRepository cardRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PaymentHistoryRepository paymentHistoryRepository;
 
     // 모든 Fellowship의 특정 필드만 가져오기
     @GetMapping("/fellowship")
@@ -129,5 +132,104 @@ public class FellowshipController {
     @PostMapping("/fellowship/request")
     public void requestFellowship(@RequestParam("user_id") Long user_id, @RequestParam("fellowship_id") Long fellowship_id) {
         fellowshipService.requestFellowship(user_id, fellowship_id);
+    }
+
+    // 모임의 정보 전달
+    // fellowship 정보 전달 -> fellowship_id를 전달 받음
+    @GetMapping("/fellowship/detail")
+    @ResponseBody
+    public ResponseEntity<String> fellowshipDetail(@RequestParam("fellowship_id") Long fellowship_id) throws JsonProcessingException {
+        Fellowship fellowship = fellowshipRepository.find(fellowship_id);
+        Card card = cardRepository.find(fellowship.getCard().getId());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("fellowship_name", fellowship.getFellowship_name());
+        result.put("description", fellowship.getDescription());
+        result.put("leader_id", fellowship.getLeader_id());
+        result.put("category", fellowship.getCategory());
+        result.put("invite_code", fellowship.getInvite_code());
+        result.put("card_id", fellowship.getCard().getId());
+        result.put("image_url", fellowship.getCard().getImage_url());
+
+        String jsonStr = mapper.writeValueAsString(result);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    // 모임의 카드 정보 및 결제내역 전달
+    // fellowship_id를 전달받아서 결제내역, 카드 정보 전달
+    @GetMapping("/fellowship/cardNpaymentDetail")
+    @ResponseBody
+    public ResponseEntity<String> fellowshipCardNPaymentDetail(@RequestParam("fellowship_id") Long fellowship_id) throws JsonProcessingException {
+        Fellowship fellowship = fellowshipRepository.find(fellowship_id);
+        Card card = cardRepository.find(fellowship.getCard().getId());
+        Long user_id = fellowship.getLeader_id();
+        Long card_id = fellowship.getCard().getId();
+
+        // PaymentHistory 테이블에서 결제 내역
+        List<PaymentHistory> paymentHistory = paymentHistoryRepository.findByUserAndCardId(user_id, card_id);
+        List<Map<String, Object>> paymentList = new ArrayList<>();
+        for (PaymentHistory payment : paymentHistory){
+            Map<String, Object> history = new HashMap<>();
+            history.put("pay_amount", payment.getPay_amount());
+            history.put("purchase_data", payment.getPurchase_date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            history.put("store_name", payment.getStore_name());
+            history.put("category", payment.getCategory());
+
+            paymentList.add(history);
+        }
+
+        // 모임 카드 정보
+        List<Map<String, Object>> cardInfo = new ArrayList<>();
+        Map<String, Object> cardDetail = new HashMap<>();
+        cardDetail.put("card_id", card.getId());
+        cardDetail.put("card_name", card.getCard_name());
+        cardDetail.put("company_code", card.getCard_code());
+        cardDetail.put("card_color", card.getCard_color());
+        cardDetail.put("card_code", card.getCard_code());
+        cardDetail.put("company", card.getCompany());
+        cardDetail.put("image_url", card.getImage_url());
+
+        cardInfo.add(cardDetail);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("card_info", cardInfo);
+        result.put("payment_histoy", paymentList);
+
+        String jsonStr = mapper.writeValueAsString(result);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    // 모임 멤버 정보 전달
+    @GetMapping("/fellowship/members")
+    @ResponseBody
+    public ResponseEntity<String> fellowshipMembers(@RequestParam("fellowship_id") Long fellowship_id) throws JsonProcessingException {
+        List<User> fellowship = fellowshipRepository.findFellowshipUsersByFellowshipId(fellowship_id);
+        Fellowship fellowshipInfo = fellowshipRepository.find(fellowship_id);
+
+        List<Map<String, Object>> fellowshipOwner = new ArrayList<>();
+        List<Map<String, Object>> fellowshipMemberList = new ArrayList<>();
+        for(User user : fellowship) {
+            // 모임주의 id랑 다른 경우 -> 멤버
+            if (!fellowshipInfo.getLeader_id().equals(user.getId())) {
+                Map<String, Object> member = new HashMap<>();
+                member.put("member_id", user.getId());
+                member.put("member_name", user.getUsername());
+
+                fellowshipMemberList.add(member);
+            } else {
+                Map<String, Object> owner = new HashMap<>();
+                owner.put("member_id", user.getId());
+                owner.put("member_name", user.getUsername());
+
+                fellowshipOwner.add(owner);
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("owner_info", fellowshipOwner);
+        result.put("member_info", fellowshipMemberList);
+
+        String jsonStr = mapper.writeValueAsString(result);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }
 }
