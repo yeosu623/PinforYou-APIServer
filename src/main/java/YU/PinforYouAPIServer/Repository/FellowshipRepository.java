@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import YU.PinforYouAPIServer.Entity.User;
 
 import java.util.List;
 
@@ -41,5 +42,40 @@ public class FellowshipRepository {
                 .setParameter("userId", userId);
 
         return query.getResultList();
+    }
+
+    // 사용자 ID와 모임 ID를 통해 fellowship_id 값을 제거
+    public void removeUserFromFellowship(Long fellowship_id, Long user_id) {
+        em.createQuery("UPDATE user u SET u.fellowship = null WHERE u.id = :user_id AND u.fellowship.id = :fellowship_id")
+                .setParameter("user_id", user_id)
+                .setParameter("fellowship_id", fellowship_id)
+                .executeUpdate();
+    }
+
+    public void addUserToFellowshipRequest(Long user_id, Long fellowship_id) {
+        // 1. fellowshipId의 leader_id 값을 가져옴
+        TypedQuery<Fellowship> fellowshipQuery = em.createQuery("SELECT f FROM fellowship f WHERE f.id = :fellowship_id", Fellowship.class);
+        fellowshipQuery.setParameter("fellowship_id", fellowship_id);
+        Fellowship fellowship = fellowshipQuery.getSingleResult();
+        Long leader_id = fellowship.getLeader_id();
+
+        // 2. userId의 friend_ids 안에 leaderId가 있는지 확인
+        TypedQuery<User> userQuery = em.createQuery("SELECT u FROM user u WHERE u.id = :user_id", User.class);
+        userQuery.setParameter("user_id", user_id);
+        User user = userQuery.getSingleResult();
+
+        if (user.getFriend_ids().contains(leader_id)) {
+            // 3. leaderId의 user를 찾아서 fellowship_request에 userId를 추가
+            TypedQuery<User> leaderQuery = em.createQuery("SELECT u FROM user u WHERE u.id = :leader_id", User.class);
+            leaderQuery.setParameter("leader_id", leader_id);
+            User leader = leaderQuery.getSingleResult();
+
+            List<Long> fellowshipRequest = leader.getFellowship_request();
+            if (!fellowshipRequest.contains(user_id)) {
+                fellowshipRequest.add(user_id);
+                leader.setFellowship_request(fellowshipRequest);
+                em.merge(leader); // User 엔티티의 fellowship_request를 DB에 반영
+            }
+        }
     }
 }
