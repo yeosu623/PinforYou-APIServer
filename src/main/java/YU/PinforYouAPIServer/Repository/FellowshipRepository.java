@@ -1,6 +1,7 @@
 package YU.PinforYouAPIServer.Repository;
 
 import YU.PinforYouAPIServer.Entity.Fellowship;
+import YU.PinforYouAPIServer.Entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -41,5 +42,18 @@ public class FellowshipRepository {
                 .setParameter("userId", userId);
 
         return query.getResultList();
+    }
+
+    // fellowship_id 찾아서 데이터 전달
+    public Fellowship findByFellowshipId(Long fellowship_id) {
+        return em.find(Fellowship.class, fellowship_id);
+    }
+
+    // fellowship_id에 해당하는 User 리스트
+    public List<User> findFellowshipUsersByFellowshipId(Long fellowship_id) {
+        String query = "SELECT u FROM user u WHERE u.fellowship.id = :fellowship_id";
+        TypedQuery<User> typedQuery = em.createQuery(query, User.class);
+        typedQuery.setParameter("fellowship_id", fellowship_id);
+        return typedQuery.getResultList();
     }
 }
