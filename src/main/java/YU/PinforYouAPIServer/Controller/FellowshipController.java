@@ -119,4 +119,15 @@ public class FellowshipController {
         String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }
+
+    // 사용자 ID와 모임 ID를 받아 해당 사용자의 fellowship_id 값을 제거
+    @DeleteMapping("/fellowship/removeUser")
+    public void removeUserFromFellowship(@RequestParam("fellowship_id") Long fellowship_id, @RequestParam("user_id") Long user_id) {
+        fellowshipService.removeUserFromFellowship(fellowship_id, user_id);
+    }
+
+    @PostMapping("/fellowship/request")
+    public void requestFellowship(@RequestParam("user_id") Long user_id, @RequestParam("fellowship_id") Long fellowship_id) {
+        fellowshipService.requestFellowship(user_id, fellowship_id);
+    }
 }
