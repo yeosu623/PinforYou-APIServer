@@ -31,8 +31,6 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j' // mysql
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.4' // java.time.LocalDateTime 타입 처리
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.4'
 
 
 	// 지인 추가 dependency
