@@ -35,13 +35,16 @@ public class Card {
     private PayEvent pay_event;
 
     @OneToMany(mappedBy = "card")
-    private List<UserCard> user_card;
+    private List<UserCard> user_card = new ArrayList<>();
 
     @OneToMany(mappedBy = "card")
-    private List<Fellowship> fellowships;
+    private List<Fellowship> fellowships = new ArrayList<>();
 
     @OneToMany(mappedBy = "card")
-    private List<PaymentHistory> payment_histories;
+    private List<PaymentHistory> payment_histories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "card")
+    private List<FellowshipPaymentHistory> fellowship_payment_histories = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private PaymentCategory major_benefit;

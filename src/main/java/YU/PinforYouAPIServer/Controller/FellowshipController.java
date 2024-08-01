@@ -102,6 +102,7 @@ public class FellowshipController {
                     "name": "김이박"
                 }
             ]
+        }
         */
 
         Map<String, Object> map1 = new LinkedHashMap<>();

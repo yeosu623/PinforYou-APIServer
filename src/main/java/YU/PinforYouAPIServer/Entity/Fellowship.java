@@ -27,6 +27,9 @@ public class Fellowship {
     @OneToMany(mappedBy = "fellowship")
     private List<User> users = new ArrayList<>();
 
+    @OneToMany(mappedBy = "fellowship")
+    private List<FellowshipPaymentHistory> fellowship_payment_histories = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
