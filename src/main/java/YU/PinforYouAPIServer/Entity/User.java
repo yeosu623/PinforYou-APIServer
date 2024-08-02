@@ -63,7 +63,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<PaymentHistory> payment_histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "leader")
     private List<FellowshipPaymentHistory> fellowship_payment_histories = new ArrayList<>();
 
     //==연관관계 메서드==//

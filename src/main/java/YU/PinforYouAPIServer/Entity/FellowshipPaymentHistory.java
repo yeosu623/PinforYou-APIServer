@@ -23,8 +23,8 @@ public class FellowshipPaymentHistory {
     private Fellowship fellowship;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "leader_id")
+    private User leader;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
@@ -38,9 +38,9 @@ public class FellowshipPaymentHistory {
     private PaymentCategory category;
 
     //==연관관계 메서드==//
-    public void setUser(User user) {
-        this.user = user;
-        user.getFellowship_payment_histories().add(this);
+    public void setLeader(User leader) {
+        this.leader = leader;
+        leader.getFellowship_payment_histories().add(this);
     }
 
     public void setCard(Card card) {

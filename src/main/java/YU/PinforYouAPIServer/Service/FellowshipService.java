@@ -1,5 +1,6 @@
 package YU.PinforYouAPIServer.Service;
 
+import YU.PinforYouAPIServer.Entity.Card;
 import YU.PinforYouAPIServer.Repository.FellowshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

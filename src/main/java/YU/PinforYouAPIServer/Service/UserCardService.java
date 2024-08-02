@@ -25,6 +25,6 @@ public class UserCardService {
     NewCardRecommendAlgorithm newCardRecommendAlgorithm;
 
     public Card newCardRecommend(Long user_id) {
-        return newCardRecommendAlgorithm.calculate(user_id);
+        return newCardRecommendAlgorithm.calculateByUser(user_id);
     }
 }

@@ -1,8 +1,11 @@
 package YU.PinforYouAPIServer.Controller;
 
+import YU.PinforYouAPIServer.Algorithm.IdentifyCardNumberAlgorithm;
 import YU.PinforYouAPIServer.Entity.Card;
 import YU.PinforYouAPIServer.Entity.UserCard;
+import YU.PinforYouAPIServer.Other.HandleCardNumber;
 import YU.PinforYouAPIServer.Other.QRCode;
+import YU.PinforYouAPIServer.Repository.UserCardRepository;
 import YU.PinforYouAPIServer.Repository.UserRepository;
 import YU.PinforYouAPIServer.Service.UserCardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,10 +14,7 @@ import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -28,6 +28,10 @@ public class UserCardController {
     UserRepository userRepository;
     @Autowired
     UserCardService userCardService;
+    @Autowired
+    UserCardRepository userCardRepository;
+    @Autowired
+    IdentifyCardNumberAlgorithm identifyCardNumberAlgorithm;
 
     @GetMapping("/userCard")
     @ResponseBody
@@ -68,6 +72,60 @@ public class UserCardController {
         }
 
         // json을 string으로 변환한뒤 반환
+        String jsonStr = mapper.writeValueAsString(map1);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    @PostMapping("/userCard")
+    @ResponseBody
+    public ResponseEntity<String> addUserCard(
+            @RequestParam("user_id") Long user_id,
+            @RequestParam("card_number") String card_number,
+            @RequestParam("card_name") String card_name
+    ) throws JsonProcessingException {
+        UserCard userCard = new UserCard();
+
+        userCard.setUser(userRepository.findOne(user_id));
+        userCard.setCard(identifyCardNumberAlgorithm.calculate(card_number));
+        userCard.setCard_num(HandleCardNumber.split(card_number));
+        userCard.setCard_name(card_name);
+
+        userCardRepository.save(userCard);
+
+        /* JSON 포맷
+        {
+            result = true
+        }
+         */
+
+        Map<String, Object> map1 = new HashMap<>();
+
+        map1.put("result", true);
+
+        String jsonStr = mapper.writeValueAsString(map1);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/userCard")
+    @ResponseBody
+    public ResponseEntity<String> deleteUserCard(
+            @RequestParam("user_id") Long user_id,
+            @RequestParam("card_id") Long card_id
+    ) throws JsonProcessingException {
+        UserCard userCard = userCardRepository.findByUserAndCardId(user_id, card_id);
+
+        userCardRepository.delete(userCard);
+
+        /* JSON 포맷
+        {
+            result = true
+        }
+        */
+
+        Map<String, Object> map1 = new HashMap<>();
+
+        map1.put("result", true);
+
         String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }

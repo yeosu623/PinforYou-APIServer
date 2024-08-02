@@ -24,6 +24,7 @@ public class UserCard {
     private Card card;
 
     private String card_num;
+    private String card_name;
 
     //==연관관계 메서드==//
     public void setUser(User user) {

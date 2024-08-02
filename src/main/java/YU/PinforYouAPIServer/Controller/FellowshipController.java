@@ -1,5 +1,6 @@
 package YU.PinforYouAPIServer.Controller;
 
+import YU.PinforYouAPIServer.Algorithm.NewCardRecommendAlgorithm;
 import YU.PinforYouAPIServer.Category.PaymentCategory;
 import YU.PinforYouAPIServer.Entity.Card;
 import YU.PinforYouAPIServer.Entity.Fellowship;
@@ -37,6 +38,8 @@ public class FellowshipController {
     private UserRepository userRepository;
     @Autowired
     private PaymentHistoryRepository paymentHistoryRepository;
+    @Autowired
+    private NewCardRecommendAlgorithm newCardRecommendAlgorithm;
 
     // 모든 Fellowship의 특정 필드만 가져오기
     @GetMapping("/fellowship")
@@ -231,6 +234,34 @@ public class FellowshipController {
         result.put("member_info", fellowshipMemberList);
 
         String jsonStr = mapper.writeValueAsString(result);
+        return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    @GetMapping("/fellowship/newCardRecommend") // 발급 추천
+    @ResponseBody
+    public ResponseEntity<String> showNewCardRecommend(@RequestParam("fellowship_id") Long fellowship_id) throws JsonProcessingException {
+        Card card = newCardRecommendAlgorithm.calculateByFellowship(fellowship_id);
+
+        /* JSON 포맷
+        {
+           "category": 카페
+           "name": 김성훈이 최고야 카드(Black)
+           "image_url": "https://..."
+           "benefits": [
+                "커피, 모바일, 문화 10% 할인",
+                "뷰티, 편의점 5% 할인"
+           ]
+        }
+        */
+
+        Map<String, Object> map1 = new LinkedHashMap<>();
+
+        map1.put("category", card.getMajor_benefit());
+        map1.put("name", card.getCard_name());
+        map1.put("image_url", card.getImage_url());
+        map1.put("benefits", card.getBenefits_description());
+
+        String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
     }
 }
