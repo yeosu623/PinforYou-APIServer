@@ -41,6 +41,7 @@ public class CommitTestController {
         String nickname = user.getNickname();
         String tel = user.getTel();
         user.setAge(age);
+        user.getFriend_request();
 
         return null;
     }
