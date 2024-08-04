@@ -39,6 +39,7 @@ public class CommitTestController {
         Long age = user.getAge();
         Long id = user.getId();
         String nickname = user.getNickname();
+        String password = user.getPassword();
 
         return null;
     }
