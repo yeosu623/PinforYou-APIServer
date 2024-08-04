@@ -37,6 +37,7 @@ public class CommitTestController {
         User user = userRepository.findOne(1L);
 
         Long age = user.getAge();
+        Long id = user.getId();
 
         return null;
     }
