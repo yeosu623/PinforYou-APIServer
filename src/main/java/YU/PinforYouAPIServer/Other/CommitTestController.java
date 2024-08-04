@@ -42,6 +42,8 @@ public class CommitTestController {
         String tel = user.getTel();
         user.setAge(age);
         user.getFriend_request();
+        user.getFellowship_payment_histories();
+        user.getPayment_histories();
 
         return null;
     }
