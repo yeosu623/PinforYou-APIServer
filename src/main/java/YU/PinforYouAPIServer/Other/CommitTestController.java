@@ -36,6 +36,8 @@ public class CommitTestController {
     public ResponseEntity<String> get2() throws JsonProcessingException {
         User user = userRepository.findOne(1L);
 
+        Long id = user.getId();
+
         return null;
     }
 
