@@ -36,4 +36,10 @@ public class CommitTestController {
     public ResponseEntity<String> get2() throws JsonProcessingException {
         return null;
     }
+
+    @GetMapping("/get3")
+    @ResponseBody
+    public ResponseEntity<String> get3() throws JsonProcessingException {
+        return null;
+    }
 }
