@@ -34,6 +34,8 @@ public class CommitTestController {
     @GetMapping("/get2")
     @ResponseBody
     public ResponseEntity<String> get2() throws JsonProcessingException {
+        User user = userRepository.findOne(1L);
+
         return null;
     }
 
