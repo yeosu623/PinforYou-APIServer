@@ -40,6 +40,12 @@ public class CommitTestController {
         Long id = user.getId();
         user.getPoint();
         user.setPoint(1L);
+        String nickname = user.getNickname();
+        String tel = user.getTel();
+        user.setAge(age);
+        user.getFriend_request();
+        user.getFellowship_payment_histories();
+        user.getPayment_histories();
 
         return null;
     }
