@@ -38,6 +38,8 @@ public class CommitTestController {
 
         Long age = user.getAge();
         Long id = user.getId();
+        user.getPoint();
+        user.setPoint(1L);
 
         return null;
     }
