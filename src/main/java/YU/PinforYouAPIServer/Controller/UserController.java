@@ -23,6 +23,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserService userService;
+
 
     @GetMapping("/friend")
     @ResponseBody
@@ -65,5 +68,15 @@ public class UserController {
 
         String jsonStr = mapper.writeValueAsString(map1);
         return new ResponseEntity<>(jsonStr, HttpStatus.OK);
+    }
+
+    @PostMapping("/user/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+        boolean isChanged = userService.changePassword(request.getUser_id(), request.getOldPassword(), request.getNewPassword());
+        if (isChanged) {
+            return ResponseEntity.ok("Password changed successfully");
+        } else {
+            return ResponseEntity.status(400).body("Incorrect old password");
+        }
     }
 }
