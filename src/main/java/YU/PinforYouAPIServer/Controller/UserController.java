@@ -79,4 +79,14 @@ public class UserController {
             return ResponseEntity.status(400).body("Incorrect old password");
         }
     }
+
+    @PostMapping("/fellowship/accept")
+    public ResponseEntity<String> acceptFellowshipRequest(@RequestBody AcceptFellowshipRequest request) {
+        boolean isAccepted = userService.acceptFellowshipRequest(request.getUser_id(), request.getAcceptedRequests());
+        if (isAccepted) {
+            return ResponseEntity.ok("Fellowship requests accepted successfully");
+        } else {
+            return ResponseEntity.status(400).body("Failed to accept fellowship requests");
+        }
+    }
 }
