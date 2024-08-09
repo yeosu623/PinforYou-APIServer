@@ -1,5 +1,5 @@
 package YU.PinforYouAPIServer.Category;
 
 public enum PaymentCategory {
-    편의점, 마트, 음식점, 카페, 병원, 약국, 기타
+    편의점, 마트, 음식점, 카페, 병원, 약국, cafe, restaurant, conveniencestore, pharmacy, supermarket, 기타
 }

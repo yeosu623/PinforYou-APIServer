@@ -42,6 +42,11 @@ public class User {
     @Convert(converter = LongListConverter.class)
     private List<Long> friend_request = new ArrayList<>();
 
+    // 사용자가 요청중인 친구요청을 관리하는 배열
+    // "pending_requestIds" : [1,2,3,4]
+    @Convert(converter = LongListConverter.class)
+    private List<Long> pending_request_ids = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fellowship_id")
     private Fellowship fellowship;
@@ -65,6 +70,9 @@ public class User {
 
     @OneToMany(mappedBy = "leader")
     private List<FellowshipPaymentHistory> fellowship_payment_histories = new ArrayList<>();
+
+    // email 추가
+    private String email;
 
     //==연관관계 메서드==//
     public void setFellowship(Fellowship fellowship) {
